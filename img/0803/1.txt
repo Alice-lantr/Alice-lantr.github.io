@@ -1,0 +1,19 @@
+ Volume in drive D is New Volume
+ Volume Serial Number is 9A8D-9BC6
+
+ Directory of D:\gitsource\Alice-lantr.github.io\img\0803
+
+08/04/2024  04:28 PM    <DIR>          .
+08/04/2024  04:28 PM    <DIR>          ..
+08/04/2024  04:28 PM                 0 1.txt
+08/04/2024  04:27 PM            68,489 Image_20240804162621.jpg
+08/04/2024  04:27 PM            77,134 Image_20240804162734.jpg
+08/04/2024  04:27 PM            86,451 Image_20240804162741.jpg
+08/04/2024  04:27 PM            89,328 Image_20240804162744.jpg
+08/04/2024  04:27 PM            61,904 Image_20240804162747.jpg
+08/04/2024  04:27 PM           117,130 Image_20240804162755.jpg
+08/04/2024  04:27 PM            66,865 Image_20240804162758.jpg
+08/04/2024  04:28 PM           232,029 Image_20240804162804.jpg
+08/04/2024  04:28 PM            62,985 Image_20240804162809.jpg
+              10 File(s)        862,315 bytes
+               2 Dir(s)  421,037,547,520 bytes free
