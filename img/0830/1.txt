@@ -1,81 +1,223 @@
- Volume in drive D is New Volume
- Volume Serial Number is 9A8D-9BC6
+import re
+import logging
 
- Directory of D:\gitsource\alice-lantr\source\img\0830
+class CodeMerger:
+    def __init__(self, template_filename, output_filename):
+        self.template_filename = template_filename
+        self.output_filename = output_filename
+        # self.data_source_template_filename = data_source_template_filename
 
-31/08/2024  08:51 PM    <DIR>          .
-31/08/2024  08:51 PM    <DIR>          ..
-31/08/2024  08:51 PM                 0 1.txt
-31/08/2024  08:18 PM         2,450,051 IMG_20240812_201537.jpg
-31/08/2024  08:18 PM         2,527,697 IMG_20240812_201538.jpg
-12/08/2024  08:16 PM         2,979,229 IMG_20240812_201636.jpg
-31/08/2024  08:35 PM         2,391,301 IMG_20240822_203615.jpg
-31/08/2024  08:34 PM         2,707,745 IMG_20240822_203639.jpg
-31/08/2024  08:30 PM         2,763,837 IMG_20240823_081833.jpg
-31/08/2024  08:30 PM         2,985,868 IMG_20240823_081849.jpg
-26/08/2024  06:55 PM         4,242,249 IMG_20240826_185530.jpg
-26/08/2024  06:55 PM         3,279,949 IMG_20240826_185544.jpg
-26/08/2024  06:56 PM         3,761,670 IMG_20240826_185606.jpg
-26/08/2024  06:56 PM         3,643,959 IMG_20240826_185628.jpg
-26/08/2024  06:56 PM         6,511,691 IMG_20240826_185646.jpg
-26/08/2024  06:56 PM         3,926,117 IMG_20240826_185655.jpg
-26/08/2024  06:58 PM         5,734,136 IMG_20240826_185839.jpg
-31/08/2024  08:19 PM         3,911,458 IMG_20240826_185911.jpg
-31/08/2024  08:19 PM         3,073,345 IMG_20240826_185932.jpg
-26/08/2024  07:00 PM         4,515,020 IMG_20240826_190008.jpg
-31/08/2024  08:19 PM         6,717,214 IMG_20240826_190027.jpg
-31/08/2024  08:20 PM         6,584,355 IMG_20240826_190038.jpg
-31/08/2024  08:20 PM         6,755,200 IMG_20240826_190051.jpg
-31/08/2024  08:20 PM         6,088,095 IMG_20240826_190100.jpg
-31/08/2024  08:20 PM         5,777,379 IMG_20240826_190110.jpg
-31/08/2024  08:20 PM         5,166,728 IMG_20240826_190119.jpg
-31/08/2024  08:21 PM         6,812,410 IMG_20240826_190141.jpg
-31/08/2024  08:21 PM         6,325,356 IMG_20240826_190200.jpg
-31/08/2024  08:21 PM         5,886,296 IMG_20240826_190218.jpg
-31/08/2024  08:21 PM         3,578,164 IMG_20240826_190237.jpg
-31/08/2024  08:21 PM         3,747,558 IMG_20240826_190318.jpg
-31/08/2024  08:21 PM         3,197,323 IMG_20240826_190337.jpg
-26/08/2024  07:03 PM         3,087,180 IMG_20240826_190358.jpg
-31/08/2024  08:22 PM         2,568,484 IMG_20240826_190424.jpg
-26/08/2024  07:04 PM         3,345,201 IMG_20240826_190440.jpg
-31/08/2024  08:22 PM         2,887,481 IMG_20240826_190500.jpg
-26/08/2024  07:05 PM         2,801,324 IMG_20240826_190511.jpg
-31/08/2024  08:23 PM         2,673,083 IMG_20240826_190521.jpg
-31/08/2024  08:23 PM         3,649,959 IMG_20240826_190541.jpg
-26/08/2024  07:06 PM         3,371,274 IMG_20240826_190559.jpg
-31/08/2024  08:23 PM         3,399,943 IMG_20240826_190627.jpg
-31/08/2024  08:24 PM         2,586,466 IMG_20240826_190645.jpg
-31/08/2024  08:24 PM         3,294,928 IMG_20240826_190659.jpg
-31/08/2024  08:24 PM         3,304,313 IMG_20240826_190707.jpg
-31/08/2024  08:25 PM         3,058,366 IMG_20240826_190712.jpg
-26/08/2024  07:07 PM         2,933,779 IMG_20240826_190727.jpg
-26/08/2024  07:07 PM         2,162,225 IMG_20240826_190738.jpg
-31/08/2024  08:25 PM         4,593,767 IMG_20240826_190747.jpg
-31/08/2024  08:31 PM         3,295,825 IMG_20240826_190808.jpg
-31/08/2024  08:25 PM         5,460,143 IMG_20240826_190831.jpg
-31/08/2024  08:25 PM         5,992,793 IMG_20240826_190839.jpg
-31/08/2024  08:26 PM         5,354,641 IMG_20240826_190848.jpg
-31/08/2024  08:26 PM         2,685,292 IMG_20240826_190856.jpg
-31/08/2024  08:26 PM         6,667,783 IMG_20240826_190906.jpg
-26/08/2024  07:09 PM         2,308,287 IMG_20240826_190935.jpg
-26/08/2024  07:09 PM         2,739,970 IMG_20240826_190949.jpg
-26/08/2024  07:09 PM         2,402,225 IMG_20240826_190957.jpg
-31/08/2024  08:26 PM         5,068,234 IMG_20240826_191011.jpg
-31/08/2024  08:26 PM         2,572,829 IMG_20240826_191028.jpg
-31/08/2024  08:26 PM         6,407,342 IMG_20240826_191048.jpg
-31/08/2024  08:27 PM         3,922,428 IMG_20240826_191320.jpg
-31/08/2024  08:27 PM         3,479,864 IMG_20240826_191350.jpg
-31/08/2024  08:27 PM         2,397,368 IMG_20240826_191501.jpg
-31/08/2024  08:27 PM         3,235,195 IMG_20240826_191509.jpg
-31/08/2024  08:27 PM         2,776,180 IMG_20240826_191601.jpg
-28/08/2024  07:38 PM         3,767,075 IMG_20240828_193806.jpg
-28/08/2024  07:38 PM         3,716,826 IMG_20240828_193810.jpg
-28/08/2024  07:38 PM         3,709,065 IMG_20240828_193811.jpg
-28/08/2024  07:38 PM         4,219,271 IMG_20240828_193811_1.jpg
-31/08/2024  08:36 PM         4,190,960 IMG_20240828_195543.jpg
-31/08/2024  08:36 PM         4,044,686 IMG_20240828_195545.jpg
-29/08/2024  05:33 PM         5,354,013 IMG_20240829_173345.jpg
-29/08/2024  05:33 PM         5,650,903 IMG_20240829_173347.jpg
-31/08/2024  08:33 PM         2,704,133 IMG_20240830_195208.jpg
-              72 File(s)    281,882,504 bytes
-               2 Dir(s)  357,778,956,288 bytes free
+    def read_template(self):
+        try:
+            with open(self.template_filename, 'r', encoding='utf-8') as file:
+                return file.read()
+        except UnicodeDecodeError:
+            # 如果 UTF-8 失败，尝试其他常见编码
+            encodings = ['utf-8-sig', 'iso-8859-1', 'cp1252']
+            for encoding in encodings:
+                try:
+                    with open(self.template_filename, 'r', encoding=encoding) as file:
+                        return file.read()
+                except UnicodeDecodeError:
+                    continue
+            
+            # 如果所有尝试都失败，则抛出异常
+            raise ValueError(f"Unable to read the file with any of the attempted encodings: {encodings}")
+
+    def read_data_source_template(self, template_file):
+        """Reads the data source template code from a file."""
+        with open(template_file, "r") as file:
+            return file.read()
+
+    def write_output(self, code):
+        """Writes the merged code to an output file."""
+        with open(self.output_filename, "w") as file:
+            file.write(code)
+        print(f"Merged code written to {self.output_filename}")
+
+    def extract_function_body(self, code, function_name):
+        """Extracts the body of a function from the given source code."""
+        pattern = rf"def {function_name}\((.*?)\):\n([\s\S]+?)(?=\n\s*def|\Z)"
+        match = re.search(pattern, code)
+        if match:
+            params = match.group(1)
+            body = self.clean_code(match.group(2))
+            return params, body
+        return None, None
+
+    def clean_code(self, code):
+        """Cleans unwanted characters and snippets from the code."""
+        cleaned_code = re.sub(r'```', '', code)  # Removes stray backticks
+        return cleaned_code
+
+    def replace_function_body(self, template, function_name, new_params, new_body):
+        """Replaces the function body in the template with a new body."""
+        pattern = rf"def {function_name}\(.*?\):\n\s*pass\n"
+        replacement = f"def {function_name}({new_params}):\n{new_body}"
+        return re.sub(pattern, replacement, template)
+
+    def read_file(self, filename):
+        """Reads content from a file."""
+        try:
+            with open(filename, 'r', encoding='utf-8') as file:
+                return file.read()
+        except UnicodeDecodeError:
+            # 如果 UTF-8 失败，尝试使用 GBK
+            try:
+                with open(filename, 'r', encoding='gbk') as file:
+                    return file.read()
+            except UnicodeDecodeError:
+                # 如果 GBK 也失败，尝试使用 ISO-8859-1
+                with open(filename, 'r', encoding='iso-8859-1') as file:
+                    return file.read()
+
+    def write_file(self, filename, content):
+        """Writes content to a file."""
+        with open(filename, 'w') as file:
+            file.write(content)
+
+    def get_function_name(self, data_source_type):
+        function_names = {
+            'local': 'data_resource_local',
+            'yahoo': 'data_resource_yahoo',
+            'nona': 'data_resource_nona'
+        }
+        if data_source_type not in function_names:
+            raise ValueError("Invalid type. Must be 'local', 'yahoo', or 'nona'.")
+        return function_names[data_source_type]
+
+    # def replace_data_source_function(self, data_source_type):
+    #     """
+    #     Replaces the data_resource function in the my_backtrader_strategy.py file based on the specified type.
+        
+    #     :param source_data_template_file: File containing the data source templates
+    #     :param data_source_type: String, either 'local', 'yahoo', or 'nona'
+    #     """
+    #     print("replace_data_source_function begin")
+    #     # Read the current content of my_backtrader_strategy.py
+    #     generated_code = self.read_file("my_backtrader_strategy.py")
+
+    #     # Read the data source template
+    #     data_source_template = self.read_file('data_resource_template.py')
+    #     print("replace_data_source_function 111", generated_code)
+    #     # if data_source_type == 'local':
+    #     #     function_name = 'data_resource_local'
+    #     # elif data_source_type == 'yahoo':
+    #     #     function_name = 'data_resource_yahoo'
+    #     # elif data_source_type == 'nona':
+    #     #     function_name = 'data_resource_nona'
+    #     # else:
+    #     #     raise ValueError("Invalid type. Must be 'local', 'yahoo', or 'nona'.")
+    #     function_name = self.get_function_name(data_source_type)
+
+    #     params, new_body = self.extract_function_body(data_source_template, function_name)
+    #     if new_body:
+    #         generated_code = self.replace_function_body(generated_code, 'data_resource', 'request_data', new_body)
+    #         print(f"Data source function replaced with {function_name}", generated_code)
+            
+    #         # Write the modified content back to my_backtrader_strategy.py
+    #         self.write_file("my_backtrader_strategy.py", generated_code)
+    #         print(f"Updated content written to {self.output_filename}")
+    #     else:
+    #         print(f"Function {function_name} not found in data source template.")
+    #     return generated_code
+
+    def replace_data_source_function(self, data_source_type):
+        """
+        Replaces the data_resource function in the my_backtrader_strategy.py file
+        with the content from the corresponding template file based on the specified type.
+        
+        :param data_source_type: String, either 'local', 'yahoo', or 'nona'
+        """
+        print(f"replace_data_source_function: {data_source_type}")
+        
+        # Determine the template file name based on data_source_type
+        template_file = f'data_source_{data_source_type}_template.py'
+        
+        # Read the current content of my_backtrader_strategy.py
+        try:
+            generated_code = self.read_file("my_backtrader_strategy.py")
+        except Exception as e:
+            print(f"Error reading my_backtrader_strategy.py: {str(e)}")
+            return None
+        
+        # Read the content of the corresponding template file
+        try:
+            template_content = self.read_file(template_file)
+        except FileNotFoundError:
+            print(f"Template file {template_file} not found.")
+            return generated_code
+        except Exception as e:
+            print(f"Error reading template file {template_file}: {str(e)}")
+            return generated_code
+        
+        # Find the data_resource function in the generated code
+        data_resource_pattern = r'def data_resource\(request_data\):.*?(?=\n\S)'
+        match = re.search(data_resource_pattern, generated_code, re.DOTALL)
+        
+        if match:
+            # Replace the entire data_resource function with the template content
+            new_generated_code = generated_code[:match.start()] + template_content + generated_code[match.end():]
+            print(f"Data source function replaced with content from {template_file}")
+            
+            # Write the modified content back to my_backtrader_strategy.py
+            try:
+                self.write_file("my_backtrader_strategy.py", new_generated_code)
+                print(f"Updated content written to {self.output_filename}")
+            except Exception as e:
+                print(f"Error writing to my_backtrader_strategy.py: {str(e)}")
+                return generated_code
+            
+            return new_generated_code
+        else:
+            print("data_resource function not found in my_backtrader_strategy.py")
+            return generated_code
+    
+    def merge_code(self, source_code):
+        """Merges source code into the template and replaces the data source function."""
+        template_code = self.read_template()
+        function_names = [
+            "__init__", "pre_condition", "pre_condition_cancel",
+            "buy_condition_1", "buy_condition_2", "buy_condition_3",
+            "sell_condition_1", "sell_condition_2", "sell_condition_3"
+        ]
+
+        for function_name in function_names:
+            params, body = self.extract_function_body(source_code, function_name)
+            if body:
+                template_code = self.replace_function_body(template_code, function_name, params, body)
+
+        # Replace the data source function
+        # template_code = self.replace_data_source_function(template_code, data_source_type)
+
+        self.write_output(template_code)
+        return template_code
+    
+# Example usage
+if __name__ == "__main__":
+    source_code = """
+    def __init__(self):
+        self.aroon_up = bt.indicators.AroonUp(period=14)
+        self.aroon_down = bt.indicators.AroonDown(period=14)
+        self.sma_10 = bt.indicators.SMA(period=10)
+        self.sma_20 = bt.indicators.SMA(period=20)
+
+    def pre_condition(self):
+        return True
+    def pre_condition_cancel(self):
+        return False
+    def buy_condition_1(self):
+        return self.aroon_up[0] > self.aroon_down[0] and self.aroon_up[-1] <= self.aroon_down[-1]
+    def buy_condition_2(self):
+        return False
+    def buy_condition_3(self):
+        return False
+    def sell_condition_1(self):
+        return self.sma_10[0] < self.sma_20[0] and self.sma_10[-1] >= self.sma_20[-1]
+    def sell_condition_2(self):
+        return False
+    def sell_condition_3(self):
+        return False
+    """
+    merger = CodeMerger('strategy_template.py', 'my_backtrader_strategy.py')
+    merger.merge_code(source_code)
